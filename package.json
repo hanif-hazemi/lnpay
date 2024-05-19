@@ -1,0 +1,14 @@
+{
+    "name": "lnpay",
+    "version": "1.0.0",
+    "description": "Webhook endpoint for Lightning payments",
+    "main": "index.js",
+    "scripts": {
+      "start": "vercel dev"
+    },
+    "dependencies": {
+      "micro": "^9.3.4",
+      "twilio": "^3.68.0"
+    }
+  }
+  
