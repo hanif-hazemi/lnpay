@@ -9,7 +9,7 @@ const qrCodeElement = document.getElementById("qrCode");
 new QRCode(qrCodeElement, walletAddress);
 
 // Fetch wallet address from backend
-fetch('https://your-vercel-backend-url/api/wallet-address')
+fetch('https://api.vercel.com/v1/integrations/deploy/prj_6CZqjLAYQYAuqvuNAyAj4qfPHarD/eAdEXw6cEa')
     .then(response => response.json())
     .then(data => {
         // Display wallet address
