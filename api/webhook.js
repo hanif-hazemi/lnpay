@@ -1,22 +1,31 @@
-// Example webhook endpoint using Express.js
 const express = require('express');
+const bodyParser = require('body-parser');
+const { Server } = require('socket.io');
+const http = require('http');
+
 const app = express();
+app.use(bodyParser.json());
 
-// Define endpoint to receive payment notifications
-app.post('/webhook', (req, res) => {
-    const paymentData = req.body; // Assuming payment data is sent in the request body
-    const paymentAmount = paymentData.amount;
-    const walletAddress = paymentData.address;
+const server = http.createServer(app);
+const io = new Server(server);
 
-    // Trigger voice notification
-    sendVoiceNotification(`Thank you. Payment received ${paymentAmount} satoshi.`);
-
-    res.status(200).send('Payment notification received.');
+// Setup webhook endpoint
+app.post('/api/webhook', (req, res) => {
+    const { state, value } = req.body;
+    if (state === 'SETTLED') {
+        const message = `Thank you. Payment received. ${value} satoshi.`;
+        io.emit('paymentReceived', message); // Emit the event to clients
+        res.status(200).send('Notification received');
+    } else {
+        res.status(200).send('Payment not settled');
+    }
 });
 
-// Function to send voice notification using Twilio (example)
-function sendVoiceNotification(message) {
-    // Twilio setup and code to send voice notification
-}
+// Serve frontend
+app.use(express.static('public'));
+
+server.listen(3000, () => {
+    console.log('Server is running on port 3000');
+});
 
 module.exports = app;

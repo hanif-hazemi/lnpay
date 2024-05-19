@@ -3,14 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lightning Wallet QR Code Generator</title>
-    <!-- Include locally downloaded qrcode.min.js library -->
-    <script src="qrcode.min.js"></script>
+    <title>Lightning Payment</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
-    <h1>Lightning Wallet QR Code Generator</h1>
-    <div id="walletAddress"></div>
-    <div id="qrCode"></div>
-    <script src="script.js"></script>
+    <h1>Lightning Payment</h1>
+    <div id="qrcode"></div>
+    <p id="address">hanif@getalby.com</p>
+    <script>
+        // Generate QR code
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            text: "lnurlp:hanif@getalby.com",
+            width: 128,
+            height: 128
+        });
+
+        // Establish a WebSocket connection to the server
+        const socket = io(); // This line establishes the connection
+
+        // Listen for 'paymentReceived' event from the server
+        socket.on('paymentReceived', function(message) {
+            alert(message); // Show an alert with the payment message
+            // Use Web Speech API to voice out the message
+            const speech = new SpeechSynthesisUtterance(message);
+            window.speechSynthesis.speak(speech); // Speak the message
+        });
+    </script>
 </body>
 </html>
